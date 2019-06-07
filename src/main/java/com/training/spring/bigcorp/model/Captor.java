@@ -3,6 +3,7 @@ package com.training.spring.bigcorp.model;
 import java.util.Objects;
 import java.util.UUID;
 
+
 public class Captor {
     /**
      * Captor id
@@ -14,7 +15,15 @@ public class Captor {
      */
     private String name;
 
+    /**
+     * Type of power source
+     */
     private PowerSource powerSource;
+
+    /**
+     * Site where captor is
+     */
+    private Site site;
 
     @Deprecated
     public Captor() {
@@ -25,10 +34,17 @@ public class Captor {
      * Constructor to use with required property
      * @param name
      * @param powerSource
+     * @param site
      */
-    public Captor(String name, PowerSource powerSource) {
+    public Captor(String name, PowerSource powerSource, Site site) {
         this.name = name;
         this.powerSource = powerSource;
+        this.site = site;
+    }
+
+    public Captor(String name, Site site){
+        this.name = name;
+        this.site = site;
     }
 
     public Captor(String name){
@@ -57,6 +73,14 @@ public class Captor {
 
     public void setPowerSource(PowerSource powerSource) {
         this.powerSource = powerSource;
+    }
+
+    public Site getSite() {
+        return site;
+    }
+
+    public void setSite(Site site) {
+        this.site = site;
     }
 
     @Override

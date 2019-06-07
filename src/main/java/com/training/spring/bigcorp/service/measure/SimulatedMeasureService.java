@@ -27,7 +27,7 @@ public class SimulatedMeasureService implements MeasureService {
         Instant current = start;
 
         while(current.isBefore(end)){
-            measures.add(new Measure(current,properties.getMeasure().getDefaultSimulated(),captor));
+            measures.add(new Measure((current),properties.getMeasure().getDefaultSimulated(),captor));
             current = current.plusSeconds(step.getDurantionInSecondes());
         }
         return measures;

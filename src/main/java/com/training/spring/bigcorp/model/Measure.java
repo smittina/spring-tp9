@@ -6,6 +6,11 @@ import java.util.Objects;
 public class Measure {
 
     /**
+     * Identifiant
+     */
+    private Long id;
+
+    /**
      * Instant au format UTC où la date a été lue
      */
     private Instant instant;
@@ -27,10 +32,13 @@ public class Measure {
      * @param captor
      */
     public Measure(Instant instant, Integer valueInWatt, Captor captor) {
+
+        this.id = id;
         this.instant = instant;
         this.valueInWatt = valueInWatt;
         this.captor = captor;
     }
+
 
     public Instant getInstant() {
         return instant;
@@ -56,10 +64,20 @@ public class Measure {
         this.captor = captor;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(instant, valueInWatt, captor);
     }
+
+
 
     @Override
     public boolean equals(Object obj) {
