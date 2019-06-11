@@ -1,8 +1,6 @@
 package com.training.spring.bigcorp.service.measure;
 
-import com.training.spring.bigcorp.model.Captor;
-import com.training.spring.bigcorp.model.Measure;
-import com.training.spring.bigcorp.model.MeasureStep;
+import com.training.spring.bigcorp.model.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,7 @@ public class FixedMeasureServiceTest {
     /**
      * Captor used in tests
      */
-    private Captor captor = new Captor("test");
+    private Captor captor = new RealCaptor("test", new Site("site1"));
     /**
      * Start instant used in tests
      */

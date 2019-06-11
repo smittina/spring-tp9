@@ -2,6 +2,7 @@ package com.training.spring.bigcorp.repository;
 
 import com.training.spring.bigcorp.model.Captor;
 import com.training.spring.bigcorp.model.Measure;
+import com.training.spring.bigcorp.model.RealCaptor;
 import com.training.spring.bigcorp.model.Site;
 import org.assertj.core.api.Assertions;
 import org.hibernate.exception.ConstraintViolationException;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -34,7 +36,7 @@ public class MeasureDaoImplTest {
 
     @Test
     public void findById(){
-        Optional<Measure> measure = measureDao.findById(1L);
+        Optional<Measure> measure = measureDao.findById(-1L);
         Assertions.assertThat(measure)
                 .get()
                 .extracting("valueInWatt")
@@ -48,7 +50,7 @@ public class MeasureDaoImplTest {
 
     @Test
     public void findByIdShouldReturnNullWhenIdUnknown(){
-        Optional<Measure> measure = measureDao.findById(-1L);
+        Optional<Measure> measure = measureDao.findById(1L);
         Assertions.assertThat(measure).isEmpty();
     }
 
@@ -61,7 +63,7 @@ public class MeasureDaoImplTest {
 
     @Test
     public void create(){
-        Captor captor = new Captor("New Captor", new Site("New Site"));
+        Captor captor = new RealCaptor("New Captor", new Site("New Site"));
         captor.setId("c1");
 
         Assertions.assertThat(measureDao.findAll()).hasSize(10);
@@ -72,7 +74,7 @@ public class MeasureDaoImplTest {
 
     @Test
     public void update(){
-        Optional<Measure> measure = measureDao.findById(1L);
+        Optional<Measure> measure = measureDao.findById(-1L);
         Assertions.assertThat(measure)
                 .get()
                 .extracting("valueInWatt")
@@ -82,7 +84,7 @@ public class MeasureDaoImplTest {
             measureDao.save(m);
         });
 
-        measure = measureDao.findById(1L);
+        measure = measureDao.findById(-1L);
         Assertions.assertThat(measure)
                 .get()
                 .extracting("valueInWatt")
@@ -92,9 +94,26 @@ public class MeasureDaoImplTest {
     @Test
     public void deleteById(){
         Assertions.assertThat(measureDao.findAll()).hasSize(10);
-        measureDao.deleteById(1L);
+        measureDao.deleteById(-1L);
         Assertions.assertThat(measureDao.findAll()).hasSize(9);
     }
 
+    @Test
+    public void preventConcurrentWrite(){
+        Measure measure = measureDao.getOne(-1L);
+        Assertions.assertThat(measure.getVersion()).isEqualTo(0);
+
+        entityManager.detach(measure);
+        measure.setValueInWatt(2_000_000);
+
+        Measure attachedMeasure = measureDao.save(measure);
+        entityManager.flush();
+
+        Assertions.assertThat(attachedMeasure.getValueInWatt()).isEqualTo(2_000_000);
+        Assertions.assertThat(attachedMeasure.getVersion()).isEqualTo(1);
+
+        Assertions.assertThatThrownBy(()-> measureDao.save(measure))
+                .isExactlyInstanceOf(ObjectOptimisticLockingFailureException.class);
+    }
 
 }

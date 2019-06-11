@@ -17,6 +17,7 @@ import java.util.Scanner;
 public class SiteServiceImpl implements SiteService {
 
     private static Logger LOG = LoggerFactory.getLogger(SiteService.class);
+
     private CaptorService captorService;
 
     @Autowired

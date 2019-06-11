@@ -1,8 +1,6 @@
 package com.training.spring.bigcorp.repository;
 
-import com.training.spring.bigcorp.model.Captor;
-import com.training.spring.bigcorp.model.PowerSource;
-import com.training.spring.bigcorp.model.Site;
+import com.training.spring.bigcorp.model.*;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.groups.Tuple;
 import org.junit.Before;
@@ -15,6 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -72,6 +71,12 @@ public class CaptorDaoImplTest {
     }
 
     @Test
+    public void findBySite(){
+        List<Captor> captors = captorDao.findBySiteId("site1");
+        Assertions.assertThat(captors).hasSize(2);
+    }
+
+    @Test
     public void findByExample(){
         ExampleMatcher matcher = ExampleMatcher.matching()
                 .withMatcher("name", match -> match.ignoreCase().contains())
@@ -80,7 +85,7 @@ public class CaptorDaoImplTest {
         ;
 
         Site site = siteDao.getOne("site1");
-        Captor captor = new Captor("lienn",site);
+        Captor captor = new FixedCaptor("lienn",site);
 
         List<Captor> captors = captorDao.findAll(Example.of(captor,matcher));
 
@@ -93,8 +98,8 @@ public class CaptorDaoImplTest {
     @Test
     public void create(){
         Assertions.assertThat(captorDao.findAll()).hasSize(2);
-        Captor captor = new Captor("New Captor", site);
-        captor.setPowerSource(PowerSource.SIMULATED);
+        Captor captor = new RealCaptor("New Captor", site);
+        //captor.setPowerSource(PowerSource.SIMULATED);
 
         captorDao.save(captor);
 
@@ -126,7 +131,7 @@ public class CaptorDaoImplTest {
 
     @Test
     public void deleteById(){
-        Captor newCaptor = new Captor("New Captor",site);
+        Captor newCaptor = new RealCaptor("New Captor",site);
         captorDao.save(newCaptor);
         Assertions.assertThat(captorDao.findById(newCaptor.getId())).isNotEmpty();
 
@@ -147,5 +152,61 @@ public class CaptorDaoImplTest {
                 })
                 .isExactlyInstanceOf(PersistenceException.class)
                 .hasCauseExactlyInstanceOf(ConstraintViolationException.class);
+    }
+
+    @Test
+    public void preventConcurrentWrite(){
+        Captor captor = captorDao.getOne("c1");
+        // A la base le numéro de version est à sa valeur initiale
+        Assertions.assertThat(captor.getVersion()).isEqualTo(0);
+
+        // On détache cet objet du contexte de la persistence
+        entityManager.detach(captor);
+        captor.setName("Captor Updated");
+
+        // On force la mise à jour en base (via flush) et on vérifie que l'objet retourné et attaché à la session a été mis à jour
+        Captor attachedCaptor = captorDao.save(captor);
+        entityManager.flush();
+
+        Assertions.assertThat(attachedCaptor.getName()).isEqualTo("Captor Updated");
+        Assertions.assertThat(attachedCaptor.getVersion()).isEqualTo(1);
+
+        // Si maintenant je rééssaie d'enregistrer captor, comme le numéro de version est à 0 je dois avoir une exception
+        Assertions.assertThatThrownBy(()->{
+            captorDao.save(captor);})
+                .isExactlyInstanceOf(ObjectOptimisticLockingFailureException.class);
+    }
+
+    @Test
+    public void createShouldThrowExceptionWhenNameIsNull(){
+        Assertions
+                .assertThatThrownBy(()->{
+                    captorDao.save(new RealCaptor(null,site));
+                    entityManager.flush();
+                })
+                .isExactlyInstanceOf(javax.validation.ConstraintViolationException.class)
+                .hasMessageContaining("ne peut pas être nul");
+    }
+
+    @Test
+    public void createShouldThrowExceptionWhenNameSizeIsInvalid(){
+        Assertions
+                .assertThatThrownBy(()->{
+                    captorDao.save(new RealCaptor("ee", site));
+                    entityManager.flush();
+                })
+                .isExactlyInstanceOf(javax.validation.ConstraintViolationException.class)
+                .hasMessageContaining("la taille doit être comprise entre 3 et 100");
+    }
+
+    @Test
+    public void createShouldThrowEceptionWhenMinIsSuperiorMax(){
+        Assertions
+                .assertThatThrownBy(()->{
+                    captorDao.save(new SimulatedCaptor("name",site, 10,9));
+                    entityManager.flush();
+                })
+                .isExactlyInstanceOf(javax.validation.ConstraintViolationException.class)
+                .hasMessageContaining("minPowerInWatt should be less than maxPowerInWatt");
     }
 }

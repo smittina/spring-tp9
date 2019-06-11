@@ -45,7 +45,7 @@ public class CaptorServiceImpl implements CaptorService{
     @Override
     @Monitored
     public Set<Captor> findBySite(String siteId) {
-        List<Captor> captors = captorDao.findBySite(siteId);
+        List<Captor> captors = captorDao.findBySiteId(siteId);
         Set<Captor> captorsSet = captors.stream().collect(Collectors.toSet());
         return captorsSet;
     }

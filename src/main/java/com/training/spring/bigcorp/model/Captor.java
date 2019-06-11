@@ -1,11 +1,14 @@
 package com.training.spring.bigcorp.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-public class Captor {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public abstract  class Captor {
     /**
      * Captor id
      */
@@ -15,24 +18,18 @@ public class Captor {
     /**
      * Captor name
      */
-    @Column(nullable = false)
+    @NotNull
+    @Size(min=3, max=100)
     private String name;
-
-    /**
-     * Type of power source
-     */
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private PowerSource powerSource;
-
-    @Column
-    private Integer defaultPowerInWatt;
 
     /**
      * Site where captor is
      */
     @ManyToOne
     private Site site;
+
+    @Version
+    private int version;
 
     @Deprecated
     public Captor() {
@@ -42,16 +39,9 @@ public class Captor {
     /**
      * Constructor to use with required property
      * @param name
-     * @param powerSource
      * @param site
      */
-    public Captor(String name, PowerSource powerSource, Site site) {
-        this.name = name;
-        this.powerSource = powerSource;
-        this.site = site;
-    }
-
-    public Captor(String name, Site site){
+    public Captor(String name, Site site) {
         this.name = name;
         this.site = site;
     }
@@ -76,20 +66,20 @@ public class Captor {
         this.name = name;
     }
 
-    public PowerSource getPowerSource() {
-        return powerSource;
-    }
-
-    public void setPowerSource(PowerSource powerSource) {
-        this.powerSource = powerSource;
-    }
-
     public Site getSite() {
         return site;
     }
 
     public void setSite(Site site) {
         this.site = site;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     @Override

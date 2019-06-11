@@ -1,6 +1,8 @@
 package com.training.spring.bigcorp.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -17,13 +19,14 @@ public class Measure {
     /**
      * Instant au format UTC où la date a été lue
      */
-    @Column(nullable = false)
+    @NotNull
+    @Past
     private Instant instant;
 
     /**
      * Valeur en watt
      */
-    @Column(nullable=false)
+    @NotNull
     private Integer valueInWatt;
 
     /**
@@ -31,6 +34,9 @@ public class Measure {
      */
     @ManyToOne
     private Captor captor;
+
+    @Version
+    private int version;
 
     public Measure(){
 
@@ -81,6 +87,14 @@ public class Measure {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.training.spring.bigcorp.service;
 
 import com.training.spring.bigcorp.model.Captor;
+import com.training.spring.bigcorp.model.RealCaptor;
 import com.training.spring.bigcorp.model.Site;
 import com.training.spring.bigcorp.repository.CaptorDao;
 import com.training.spring.bigcorp.service.measure.MeasureServiceConfigurationTest;
@@ -13,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -34,8 +36,6 @@ public class CaptorServiceImplTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    /*@Autowired
-    private CaptorService captorService;*/
 
     @Test
     public void findBySiteShouldReturnNullWhenIdIsNull() {
@@ -54,8 +54,8 @@ public class CaptorServiceImplTest {
         // Initialisation
         String siteId = "siteId";
 
-        Captor expectedCaptor = new Captor("Capteur A", new Site("Florange"));
-        Mockito.when(captorDao.findBySite(siteId)).thenReturn(Arrays.asList(expectedCaptor));
+        Captor expectedCaptor = new RealCaptor("Capteur A", new Site("Florange"));
+        Mockito.when(captorDao.findBySiteId(siteId)).thenReturn(Arrays.asList(expectedCaptor));
 
         // Appel du SUT
         Set<Captor> captors = captorService.findBySite(siteId);
