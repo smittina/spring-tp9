@@ -7,14 +7,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-@JdbcTest
-@ContextConfiguration(classes={DaoTestConfig.class})
+@DataJpaTest
+@ComponentScan
 public class SiteDaoImplTest {
 
     @Autowired
@@ -46,7 +48,7 @@ public class SiteDaoImplTest {
     public void create(){
         Assertions.assertThat(siteDao.findAll()).hasSize(1);
 
-        siteDao.create(new Site("New Site"));
+        siteDao.persist(new Site("New Site"));
 
         Assertions.assertThat(siteDao.findAll())
                 .hasSize(2)
@@ -61,7 +63,7 @@ public class SiteDaoImplTest {
         Assertions.assertThat(site.getName()).isEqualTo("Bigcorp Lyon");
 
         site.setName("Name Updated");
-        siteDao.update(site);
+        siteDao.persist(site);
 
         site = siteDao.findById("site1");
         Assertions.assertThat(site.getName()).isEqualTo("Name Updated");
@@ -70,10 +72,10 @@ public class SiteDaoImplTest {
     @Test
     public void deleteById(){
         Site newSite = new Site("New Site");
-        siteDao.create(newSite);
+        siteDao.persist(newSite);
         Assertions.assertThat(siteDao.findById(newSite.getId())).isNotNull();
 
-        siteDao.deleteById(newSite.getId());
+        siteDao.deleteById(siteDao.findById(newSite.getId()));
         Assertions.assertThat(siteDao.findById(newSite.getId())).isNull();
 
     }

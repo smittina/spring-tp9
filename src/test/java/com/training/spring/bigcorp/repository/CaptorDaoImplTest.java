@@ -1,6 +1,7 @@
 package com.training.spring.bigcorp.repository;
 
 import com.training.spring.bigcorp.model.Captor;
+import com.training.spring.bigcorp.model.PowerSource;
 import com.training.spring.bigcorp.model.Site;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.groups.Tuple;
@@ -9,21 +10,29 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
+import org.hibernate.exception.ConstraintViolationException;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-@JdbcTest
-@ContextConfiguration(classes={DaoTestConfig.class})
+@DataJpaTest
+@ComponentScan
 public class CaptorDaoImplTest {
 
     @Autowired
     private CaptorDao captorDao;
 
     private Site site;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Before
     public void init(){
@@ -56,8 +65,10 @@ public class CaptorDaoImplTest {
     @Test
     public void create(){
         Assertions.assertThat(captorDao.findAll()).hasSize(2);
+        Captor captor = new Captor("New Captor", site);
+        captor.setPowerSource(PowerSource.SIMULATED);
 
-        captorDao.create(new Captor("New Captor", site));
+        captorDao.persist(captor);
 
         Assertions.assertThat(captorDao.findAll())
                 .hasSize(3)
@@ -71,7 +82,7 @@ public class CaptorDaoImplTest {
         Assertions.assertThat(captor.getName()).isEqualTo("Eolienne");
 
         captor.setName("Captor updated");
-        captorDao.update(captor);
+        captorDao.persist(captor);
 
         captor = captorDao.findById("c1");
         Assertions.assertThat(captor.getName()).isEqualTo("Captor updated");
@@ -80,16 +91,25 @@ public class CaptorDaoImplTest {
     @Test
     public void deleteById(){
         Captor newCaptor = new Captor("New Captor",site);
-        captorDao.create(newCaptor);
+        captorDao.persist(newCaptor);
         Assertions.assertThat(captorDao.findById(newCaptor.getId())).isNotNull();
 
-        captorDao.deleteById(newCaptor.getId());
+        captorDao.deleteById(captorDao.findById(newCaptor.getId()));
         Assertions.assertThat(captorDao.findById(newCaptor.getId())).isNull();
     }
 
     @Test
     public void deleteByIdShouldThrowEceptionWhenIdIsUsedAsForeignKey(){
-        Assertions.assertThatThrownBy(()->captorDao.deleteById("c1"))
-                .isExactlyInstanceOf(DataIntegrityViolationException.class);
+        /*Assertions.assertThatThrownBy(()->captorDao.deleteById(captorDao.findById("c1")))
+                .isExactlyInstanceOf(DataIntegrityViolationException.class);*/
+
+        Captor captor = captorDao.findById("c1");
+        Assertions
+                .assertThatThrownBy(()->{
+                    captorDao.deleteById(captor);
+                    entityManager.flush();
+                })
+                .isExactlyInstanceOf(PersistenceException.class)
+                .hasCauseExactlyInstanceOf(ConstraintViolationException.class);
     }
 }

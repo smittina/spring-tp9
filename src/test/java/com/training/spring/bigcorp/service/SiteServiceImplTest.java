@@ -2,12 +2,14 @@ package com.training.spring.bigcorp.service;
 
 import com.training.spring.bigcorp.model.Captor;
 import com.training.spring.bigcorp.model.Site;
+import com.training.spring.bigcorp.repository.SiteDao;
 import com.training.spring.bigcorp.service.measure.MeasureServiceConfigurationTest;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.rule.OutputCapture;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -51,6 +53,7 @@ public class SiteServiceImplTest {
         Set<Captor> expectedCpators = Collections.singleton(new Captor("Capteur A"));
 
         // Appel du SUT
+        //Site site = siteService.findById(siteId);
         Site site = siteService.findById(siteId);
 
         // Vérification
@@ -59,24 +62,7 @@ public class SiteServiceImplTest {
         assertThat(site.getCaptors()).isEqualTo(expectedCpators);
     }
 
-    /*@Test
-    public void readFileFromUrl(){
-        siteService.readFile("url:https://dev-mind.fr/lorem.txt");
-        assertThat(output.toString()).contains("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
-    }
 
-    @Test
-    public void readFileFromClassPath(){
-        siteService.readFile("classpath:lorem.txt");
-        assertThat(output.toString()).contains("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
-    }
-
-    @Test
-    public void readFileFromFileSystem(){
-        siteService.readFile("file:/C:\\Users\\Formation\\Documents\\lorem.txt");
-        assertThat(output.toString()).contains("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
-
-    }*/
 
 
 }

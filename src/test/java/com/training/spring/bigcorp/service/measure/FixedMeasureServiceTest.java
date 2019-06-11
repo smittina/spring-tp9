@@ -18,6 +18,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes={MeasureServiceConfigurationTest.class})
+// @SpringBootTest(classes={FixedMeasureService.class,BigCorpApplicationProperties.class})
+// @EnabledConfigurationProperties
 public class FixedMeasureServiceTest {
 
     @Autowired

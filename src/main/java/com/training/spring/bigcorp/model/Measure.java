@@ -1,29 +1,40 @@
 package com.training.spring.bigcorp.model;
 
+import javax.persistence.*;
 import java.time.Instant;
 import java.util.Objects;
 
+@Entity
 public class Measure {
 
     /**
      * Identifiant
      */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
      * Instant au format UTC où la date a été lue
      */
+    @Column(nullable = false)
     private Instant instant;
 
     /**
      * Valeur en watt
      */
+    @Column(nullable=false)
     private Integer valueInWatt;
 
     /**
      * Capteur
      */
+    @ManyToOne
     private Captor captor;
+
+    public Measure(){
+
+    }
 
     /**
      * Constructeur

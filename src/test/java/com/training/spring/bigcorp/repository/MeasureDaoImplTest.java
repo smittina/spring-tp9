@@ -9,6 +9,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -16,8 +18,8 @@ import java.time.Instant;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-@JdbcTest
-@ContextConfiguration(classes={DaoTestConfig.class})
+@DataJpaTest
+@ComponentScan
 public class MeasureDaoImplTest {
 
     @Autowired
@@ -52,7 +54,7 @@ public class MeasureDaoImplTest {
         captor.setId("c1");
 
         Assertions.assertThat(measureDao.findAll()).hasSize(10);
-        measureDao.create(new Measure(Instant.now(),2_000_000, captor));
+        measureDao.persist(new Measure(Instant.now(),2_000_000, captor));
         Assertions.assertThat(measureDao.findAll())
                 .hasSize(11);
     }
@@ -64,7 +66,7 @@ public class MeasureDaoImplTest {
 
         measure.setValueInWatt(2_000_000);
 
-        measureDao.update(measure);
+        measureDao.persist(measure);
         measure = measureDao.findById(1L);
         Assertions.assertThat(measure.getValueInWatt()).isEqualTo(2_000_000);
     }
@@ -72,7 +74,7 @@ public class MeasureDaoImplTest {
     @Test
     public void deleteById(){
         Assertions.assertThat(measureDao.findAll()).hasSize(10);
-        measureDao.deleteById(1L);
+        measureDao.deleteById(measureDao.findById(1L));
         Assertions.assertThat(measureDao.findAll()).hasSize(9);
     }
 }

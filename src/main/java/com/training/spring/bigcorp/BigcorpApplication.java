@@ -24,7 +24,7 @@ public class BigcorpApplication {
 		LOG.info("plus d'informations sur "+applicationInfo.getWebSiteUrl());
 		LOG.info("===============================");
 
-		context.getBean(SiteService.class).findById("test");
+
 	}
 
 }

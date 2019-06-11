@@ -15,9 +15,6 @@ import java.util.List;
 @Service("fixedMeasureService")
 public class FixedMeasureService implements MeasureService {
 
-    /*@Value("${bigcorp.measure.default-fixed}")
-    private Integer defaultValue;*/
-
     @Autowired
     BigCorpApplicationProperties properties;
 

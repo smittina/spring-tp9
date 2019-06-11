@@ -15,8 +15,6 @@ import java.util.List;
 @Service("realMeasureService")
 public class RealMeasureService implements MeasureService {
 
-    /*@Value("${bigcorp.measure.default-real}")
-    private Integer defaultValue;*/
 
     @Autowired
     BigCorpApplicationProperties properties;

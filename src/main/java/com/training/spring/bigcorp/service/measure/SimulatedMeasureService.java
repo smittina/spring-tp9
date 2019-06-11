@@ -15,9 +15,6 @@ import java.util.List;
 @Service("simulatedMeasureService")
 public class SimulatedMeasureService implements MeasureService {
 
-    /*@Value("${bigcorp.measure.default-simulated}")
-    private Integer defaultValue;*/
-
     @Autowired
     BigCorpApplicationProperties properties;
     @Override
