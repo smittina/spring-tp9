@@ -4,6 +4,7 @@ import com.training.spring.bigcorp.config.properties.BigCorpApplicationPropertie
 import com.training.spring.bigcorp.model.Captor;
 import com.training.spring.bigcorp.model.Measure;
 import com.training.spring.bigcorp.model.MeasureStep;
+import com.training.spring.bigcorp.model.SimulatedCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,12 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service("simulatedMeasureService")
-public class SimulatedMeasureService implements MeasureService {
+public class SimulatedMeasureService implements MeasureService<SimulatedCaptor> {
 
     @Autowired
     BigCorpApplicationProperties properties;
     @Override
-    public List<Measure> readMeasures(Captor captor, Instant start, Instant end, MeasureStep step) {
+    public List<Measure> readMeasures(SimulatedCaptor captor, Instant start, Instant end, MeasureStep step) {
         checkReadMeasuresArgs(captor,start,end,step);
         List<Measure> measures = new ArrayList<>();
         Instant current = start;

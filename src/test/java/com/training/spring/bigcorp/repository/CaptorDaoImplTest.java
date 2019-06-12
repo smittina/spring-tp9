@@ -31,6 +31,9 @@ public class CaptorDaoImplTest {
     @Autowired
     private CaptorDao captorDao;
 
+    @Autowired
+    private MeasureDao measureDao;
+
     private Site site;
 
     @Autowired
@@ -82,7 +85,7 @@ public class CaptorDaoImplTest {
                 .withMatcher("name", match -> match.ignoreCase().contains())
                 .withMatcher("site", match -> match.contains())
                 .withIgnorePaths("id");
-        ;
+
 
         Site site = siteDao.getOne("site1");
         Captor captor = new FixedCaptor("lienn",site);
@@ -137,6 +140,16 @@ public class CaptorDaoImplTest {
 
         captorDao.delete(newCaptor);
         Assertions.assertThat(captorDao.findById(newCaptor.getId())).isEmpty();
+    }
+
+    @Test
+    public void deleteBySiteId(){
+        Assertions.assertThat(captorDao.findBySiteId("site1")).hasSize(2);
+        // Pour ne pas avoir de contraintes d'intégrité on supprime toutes les mesures avant tout
+        measureDao.deleteAll();
+        captorDao.deleteBySiteId("site1");
+        siteDao.delete(site);
+        Assertions.assertThat(captorDao.findBySiteId("site1")).isEmpty();
     }
 
     @Test

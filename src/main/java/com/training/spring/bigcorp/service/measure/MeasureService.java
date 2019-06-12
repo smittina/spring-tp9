@@ -7,9 +7,9 @@ import com.training.spring.bigcorp.model.MeasureStep;
 import java.time.Instant;
 import java.util.List;
 
-public interface MeasureService {
+public interface MeasureService<T extends Captor> {
 
-    List<Measure> readMeasures(Captor captor, Instant start, Instant end, MeasureStep step);
+    List<Measure> readMeasures(T captor, Instant start, Instant end, MeasureStep step);
 
     /**
      * Permet de vérifier les valeurs des différents arguments
@@ -18,7 +18,7 @@ public interface MeasureService {
      * @param end
      * @param step
      */
-    default void checkReadMeasuresArgs(Captor captor, Instant start, Instant end, MeasureStep step){
+    default void checkReadMeasuresArgs(T captor, Instant start, Instant end, MeasureStep step){
         if(captor == null){
             throw new IllegalArgumentException("Captor is required");
         }

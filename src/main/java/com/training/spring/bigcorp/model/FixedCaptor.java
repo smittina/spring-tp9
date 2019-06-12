@@ -12,17 +12,19 @@ public class FixedCaptor extends Captor {
     @NotNull
     private Integer defaultPowerInWatt;
 
-    @Deprecated
+
     public FixedCaptor(){
         super();
     }
 
+
+
     public FixedCaptor(String name, Site site){
-        super(name,site);
+        super(name,site,PowerSource.FIXED);
     }
 
     public FixedCaptor(String name, Site site, Integer defaultPowerInWatt){
-        super(name,site);
+        super(name,site, PowerSource.FIXED);
         this.defaultPowerInWatt = defaultPowerInWatt;
     }
 

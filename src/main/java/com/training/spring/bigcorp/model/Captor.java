@@ -13,7 +13,7 @@ public abstract  class Captor {
      * Captor id
      */
     @Id
-    private String id = UUID.randomUUID().toString();
+    private String id;
 
     /**
      * Captor name
@@ -31,9 +31,18 @@ public abstract  class Captor {
     @Version
     private int version;
 
-    @Deprecated
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private PowerSource powerSource;
+
+
     public Captor() {
         // Use for serializer or deserializer
+    }
+
+    public Captor(Site site, PowerSource powerSource){
+        this.site = site;
+        this.powerSource = powerSource;
     }
 
     /**
@@ -41,13 +50,19 @@ public abstract  class Captor {
      * @param name
      * @param site
      */
-    public Captor(String name, Site site) {
+    public Captor(String name, Site site, PowerSource powerSource) {
         this.name = name;
         this.site = site;
+        this.powerSource = powerSource;
     }
 
     public Captor(String name){
         this.name = name;
+    }
+
+    @PrePersist
+    public void generateId(){
+        this.id = UUID.randomUUID().toString();
     }
 
     public String getId() {
@@ -80,6 +95,14 @@ public abstract  class Captor {
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    public PowerSource getPowerSource() {
+        return powerSource;
+    }
+
+    public void setPowerSource(PowerSource powerSource) {
+        this.powerSource = powerSource;
     }
 
     @Override

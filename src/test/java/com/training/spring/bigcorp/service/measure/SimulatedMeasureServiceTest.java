@@ -30,7 +30,7 @@ public class SimulatedMeasureServiceTest {
     /**
      * Captor used in tests
      */
-    private Captor captor = new RealCaptor("test", new Site("site1"));
+    private SimulatedCaptor captor = new SimulatedCaptor("test", new Site("site1"),null,null);
     /**
      * Start instant used in tests
      */

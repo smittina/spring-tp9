@@ -20,12 +20,12 @@ public class SimulatedCaptor  extends Captor{
         super();
     }
 
-    public SimulatedCaptor(String name, Site site){
+    /*public SimulatedCaptor(String name, Site site){
         super(name,site);
-    }
+    }*/
 
     public SimulatedCaptor(String name, Site site, Integer minPowerInWatt, Integer maxPowerInWatt){
-        super(name,site);
+        super(name,site, PowerSource.SIMULATED);
         this.maxPowerInWatt = maxPowerInWatt;
         this.minPowerInWatt = minPowerInWatt;
     }
