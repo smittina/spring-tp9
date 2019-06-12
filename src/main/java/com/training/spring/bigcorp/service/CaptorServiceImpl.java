@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Service("captorService")
+@Service
 public class CaptorServiceImpl implements CaptorService{
 
     /**
@@ -39,7 +39,6 @@ public class CaptorServiceImpl implements CaptorService{
         this.fixedMeasureService = fixedMeasureService;
         this.simulatedMeasureService = simulatedMeasureService;
         this.realMeasureService = realMeasureService;
-
     }
 
     @Override

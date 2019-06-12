@@ -16,18 +16,17 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-
 @RunWith(SpringRunner.class)
 //@ContextConfiguration(classes={MeasureServiceConfigurationTest.class})
-@SpringBootTest(classes={FixedMeasureService.class, BigCorpApplicationProperties.class})
+@SpringBootTest(classes={SimulatedMeasureService.class, BigCorpApplicationProperties.class})
 @EnableConfigurationProperties
-public class FixedMeasureServiceTest {
+public class SimulatedMeasureServiceTest {
 
     @Autowired
     private BigCorpApplicationProperties bigCorpApplicationProperties;
 
     @Autowired
-    private FixedMeasureService service;
+    private SimulatedMeasureService service;
     /**
      * Captor used in tests
      */
@@ -42,7 +41,7 @@ public class FixedMeasureServiceTest {
     Instant end = start.plusSeconds(60*60*24);
 
 
-   @Test
+    @Test
     public void readMeasuresThrowsExceptionWhenArgIsNull(){
         assertThatThrownBy(()-> service.readMeasures(null,start,end, MeasureStep.ONE_DAY))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -73,7 +72,7 @@ public class FixedMeasureServiceTest {
         assertThat(measures).hasSize(24);
 
         // For the moment we have always the same value
-        assertThat(measures).extracting(Measure::getValueInWatt).contains(bigCorpApplicationProperties.getMeasure().getDefaultFixed());
+        assertThat(measures).extracting(Measure::getValueInWatt).contains(bigCorpApplicationProperties.getMeasure().getDefaultSimulated());
 
         // And we have a value for each hour of the period
         assertThat(measures)
@@ -106,7 +105,4 @@ public class FixedMeasureServiceTest {
                         "2018-09-02T21:00:00Z");
 
     }
-
-
-
 }

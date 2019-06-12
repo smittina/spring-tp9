@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+
 public interface CaptorDao extends JpaRepository<Captor,String> {
 
 

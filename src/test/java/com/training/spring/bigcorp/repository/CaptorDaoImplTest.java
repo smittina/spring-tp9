@@ -200,7 +200,7 @@ public class CaptorDaoImplTest {
     }
 
     @Test
-    public void createShouldThrowEceptionWhenMinIsSuperiorMax(){
+    public void createShouldThrowExceptionWhenMinIsSuperiorMax(){
         Assertions
                 .assertThatThrownBy(()->{
                     captorDao.save(new SimulatedCaptor("name",site, 10,9));
