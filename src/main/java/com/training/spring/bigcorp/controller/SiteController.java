@@ -1,11 +1,14 @@
 package com.training.spring.bigcorp.controller;
 
+import com.training.spring.bigcorp.config.SecurityConfig;
+import com.training.spring.bigcorp.exception.NotFoundException;
 import com.training.spring.bigcorp.model.Site;
 import com.training.spring.bigcorp.repository.CaptorDao;
 import com.training.spring.bigcorp.repository.MeasureDao;
 import com.training.spring.bigcorp.repository.SiteDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +43,7 @@ public class SiteController {
     @GetMapping("/{id}")
     public ModelAndView findById(@PathVariable String id){
         return new ModelAndView("site")
-                .addObject("site",siteDao.findById(id).orElseThrow(IllegalArgumentException::new));
+                .addObject("site",siteDao.findById(id).orElseThrow(NotFoundException::new));
     }
 
     @GetMapping("/create")
@@ -49,6 +52,7 @@ public class SiteController {
                 .addObject("site", new Site());
     }
 
+    @Secured(SecurityConfig.ROLE_ADMIN)
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ModelAndView save(Site site){
         // Si pas d'Id => Mode Création
@@ -59,7 +63,7 @@ public class SiteController {
         // Sinon => Mode Modification
         else{
             // On charge l'entité correspondant à l'Id
-            Site siteToPersist = siteDao.findById(site.getId()).orElseThrow(IllegalArgumentException::new);
+            Site siteToPersist = siteDao.findById(site.getId()).orElseThrow(NotFoundException::new);
             // L'utilisateur ne peut chager que le nom du site sur l'écran
             siteToPersist.setName(site.getName());
             // Comme on est en contexte transitionnel => Pas besoin d'appeler save - l'object est automatiquement persisté
@@ -68,11 +72,12 @@ public class SiteController {
         }
     }
 
+    @Secured(SecurityConfig.ROLE_ADMIN)
     @PostMapping("/{id}/delete")
     public ModelAndView delete(@PathVariable String id){
         /* Comme les capteurs sont liés à un site et les mesures sont liés à un capteur
          Nous devons faire le ménage pour ne pas avoir d'erreurs à la suppression d'un site utilisé ailleurs dans la base*/
-        Site site = siteDao.findById(id).orElseThrow(IllegalArgumentException::new);
+        Site site = siteDao.findById(id).orElseThrow(NotFoundException::new);
         // Suppressions des mesures
         site.getCaptors().forEach(c->measureDao.deleteByCaptorId(c.getId()));
         // Suppression des capteurs
@@ -84,7 +89,7 @@ public class SiteController {
 
     @GetMapping("/{id}/measures")
     public ModelAndView findMeasuresById(@PathVariable String id) {
-        Site site = siteDao.findById(id).orElseThrow(IllegalArgumentException::new);
+        Site site = siteDao.findById(id).orElseThrow(NotFoundException::new);
 /* Comme les templates ont une intelligence limitée on concatène ici les id de
         captor dans une chaine de caractères qui pourra être exeploitée tel quelle */
         String captors = site.getCaptors()

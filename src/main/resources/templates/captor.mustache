@@ -25,6 +25,7 @@
             {{#captor.id}}<h1>Modification capteur</h1>{{/captor.id}}
             {{^captor.id}}<h1>Création capteur</h1>{{/captor.id}}
             <form action="/sites/{{captor.siteId}}/captors/" method="post">
+                <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}">
                 {{#captor.id}}<input type="hidden" class="form-control" name="id" value="{{captor.id}}">{{/captor.id}}
                  <div class="form-group">
                     <label for="siteName">Site</label>
@@ -84,6 +85,7 @@
                     </div>
                     <div class="modal-footer">
                         <form action="/sites/{{captor.siteId}}/captors/{{captor.id}}/delete" method="post">
+                            <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}">
                             <button type="button" class="btn btn-secondary" datadismiss="modal">Close</button>
                              <button type="submit" class="btn btn-danger">Supprimer</button>
                         </form>

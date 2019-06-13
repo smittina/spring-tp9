@@ -1,12 +1,15 @@
 package com.training.spring.bigcorp.controller;
 
+import com.training.spring.bigcorp.config.SecurityConfig;
 import com.training.spring.bigcorp.controller.dto.CaptorDto;
+import com.training.spring.bigcorp.exception.NotFoundException;
 import com.training.spring.bigcorp.model.*;
 import com.training.spring.bigcorp.repository.CaptorDao;
 import com.training.spring.bigcorp.repository.MeasureDao;
 import com.training.spring.bigcorp.repository.SiteDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,7 +65,7 @@ public class CaptorController {
 
     @GetMapping("/{id}")
     public ModelAndView findById(@PathVariable String siteId, @PathVariable String id){
-       Captor captor = captorDao.findById(id).orElseThrow(IllegalArgumentException::new);
+       Captor captor = captorDao.findById(id).orElseThrow(NotFoundException::new);
         return new ModelAndView("captor")
                 .addObject("captor",toDto(captor));
     }
@@ -75,27 +78,27 @@ public class CaptorController {
      */
     @GetMapping("/create")
     public ModelAndView create(Model model, @PathVariable String siteId){
-        Site site = siteDao.findById(siteId).orElseThrow(IllegalArgumentException::new);
+        Site site = siteDao.findById(siteId).orElseThrow(NotFoundException::new);
 
         return new ModelAndView("captor")
                 .addObject("captor", new CaptorDto(site,new FixedCaptor(null,site,null)));
     }
 
-
-
+    @Secured(SecurityConfig.ROLE_ADMIN)
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ModelAndView save(@PathVariable String siteId, CaptorDto captorDto){
-        Site site = siteDao.findById(siteId).orElseThrow(IllegalArgumentException::new);
+        Site site = siteDao.findById(siteId).orElseThrow(NotFoundException::new);
         Captor captor = captorDto.toCaptor(site);
         captorDao.save(captor);
         return new ModelAndView("site")
                 .addObject("site",site);
     }
 
+    @Secured(SecurityConfig.ROLE_ADMIN)
     @PostMapping("/{id}/delete")
     public ModelAndView delete(@PathVariable String siteId, @PathVariable String id){
 
-        Site site = siteDao.findById(siteId).orElseThrow(IllegalArgumentException::new);
+        Site site = siteDao.findById(siteId).orElseThrow(NotFoundException::new);
         // Suppressions des mesures
         measureDao.deleteByCaptorId(id);
         captorDao.deleteById(id);
