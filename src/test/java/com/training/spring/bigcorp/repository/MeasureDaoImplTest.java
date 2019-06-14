@@ -5,32 +5,36 @@ import com.training.spring.bigcorp.model.Measure;
 import com.training.spring.bigcorp.model.RealCaptor;
 import com.training.spring.bigcorp.model.Site;
 import org.assertj.core.api.Assertions;
-import org.hibernate.exception.ConstraintViolationException;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Classe de tests de la Classe MeasureDaoImpl
+ */
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @ComponentScan
 public class MeasureDaoImplTest {
 
+    /**
+     * Dao Measure
+     */
     @Autowired
     private MeasureDao measureDao;
 
+    /**
+     * Entity Manager
+     */
     @Autowired
     EntityManager entityManager;
 
@@ -41,11 +45,6 @@ public class MeasureDaoImplTest {
                 .get()
                 .extracting("valueInWatt")
                 .containsExactly(1_000_000);
-
-        //Assertions.assertThat(measure.getInstant()).isEqualTo(Instant.parse("2018-08-09T11:00:00.000Z"));
-        //Assertions.assertThat(measure.getValueInWatt()).isEqualTo(1_000_000);
-        //Assertions.assertThat(measure.getCaptor().getName()).isEqualTo("Eolienne");
-        //Assertions.assertThat(measure.getCaptor().getSite().getName()).isEqualTo("Bigcorp Lyon");
     }
 
     @Test
@@ -146,11 +145,4 @@ public class MeasureDaoImplTest {
         Assertions.assertThatThrownBy(()-> measureDao.save(measure))
                 .isExactlyInstanceOf(ObjectOptimisticLockingFailureException.class);
     }
-
-
-
-
-
-
-
 }

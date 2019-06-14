@@ -9,23 +9,40 @@ import javax.validation.constraints.Size;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Représente un utilisateur du site
+ */
 @Entity
 @Table(name="users")
 public class User {
 
+    /**
+     * Identifiant
+     */
     @Id
     @Size(max=200)
     private String username;
 
+    /**
+     * Mot de passe
+     */
     @NotNull
     @Size(max=200)
     private String password;
 
+    /**
+     * Autorisé à pénétrer sur le site ?
+     */
     @NotNull
     private boolean enabled;
 
+    /**
+     * Liste des différents droits qu'il possède sur le site
+     */
     @OneToMany
     private Set<Authority> authorities;
+
+    // GETTERS AND SETTERS
 
     public String getUsername() {
         return username;
@@ -58,6 +75,8 @@ public class User {
     public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
     }
+
+    // EQUALS AND HASHCODE
 
     @Override
     public boolean equals(Object o) {

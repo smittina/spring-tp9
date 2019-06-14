@@ -8,9 +8,17 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Date;
 
+/**
+ * Controleur qui permet de gérer les exceptions
+ */
 @ControllerAdvice
 public class ExceptionController {
 
+    /**
+     * Permet de traiter l'erreur 404 : NotFound
+     * @param e l'exception
+     * @return
+     */
     @ExceptionHandler(NotFoundException.class)
     public ModelAndView handle(NotFoundException e){
         ModelAndView mv = new ModelAndView("/error/404")

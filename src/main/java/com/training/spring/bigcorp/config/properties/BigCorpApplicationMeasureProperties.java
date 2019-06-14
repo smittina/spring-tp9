@@ -1,13 +1,22 @@
 package com.training.spring.bigcorp.config.properties;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 
+/**
+ * Représente les informations de l'application concernant les propriétés des mesures
+ */
 public class BigCorpApplicationMeasureProperties {
+    /**
+     * Mesure par défault pour un captor fixe
+     */
     private int defaultFixed;
+    /**
+     * Mesure par défaut pour un capteur simulé
+     */
     private int defaultSimulated;
+    /**
+     * Mesure par défaut pour un capteur réel
+     */
     private int defaultReal;
 
     public int getDefaultFixed() {

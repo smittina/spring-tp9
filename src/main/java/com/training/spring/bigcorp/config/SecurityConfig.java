@@ -22,10 +22,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
 
+/**
+ * Configure la sécurité de l'application
+ */
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
+    /**
+     * Role Admin
+     */
     public final static String ROLE_ADMIN = "ROLE_ADMIN";
 
     @Configuration
@@ -70,6 +76,8 @@ public class SecurityConfig {
             jdbcUserDetailsManager.setDataSource(dataSource);
             jdbcUserDetailsManager.createUser(User.builder().username("user").password(
                     bCryptPasswordEncoder().encode("password")).roles("USER").build());
+            jdbcUserDetailsManager.createUser(User.builder().username("admin").password(
+                    bCryptPasswordEncoder().encode("password")).roles("ADMIN").build());
             return jdbcUserDetailsManager;
         }
     }
@@ -100,6 +108,8 @@ public class SecurityConfig {
             @Override
             public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
                 if(modelAndView != null){
+                    // Est-ce qu'on est admin ou non
+                    modelAndView.addObject("admin",request.isUserInRole("ADMIN"));
                     //Est-ce qu'on est loggué ou non
                     modelAndView.addObject("logged", request.getUserPrincipal() != null);
                     modelAndView.addObject("_csrf", request.getAttribute("_csrf"));

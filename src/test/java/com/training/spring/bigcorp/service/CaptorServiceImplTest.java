@@ -21,13 +21,22 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Arrays;
 import java.util.Set;
 
+/**
+ * Classe de tests de la classe CaptorServiceImpl
+ */
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes={MeasureServiceConfigurationTest.class})
 public class CaptorServiceImplTest {
 
+    /**
+     * Dao Captor via Mockito
+     */
     @Mock
     private CaptorDao captorDao;
 
+    /**
+     * CaptorServiceImpl dans lequel on inject le Mock du captorDao
+     */
     @InjectMocks
     private CaptorServiceImpl captorService;
 

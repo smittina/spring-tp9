@@ -6,6 +6,9 @@ import javax.validation.constraints.Size;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * Représente un Capteur
+ */
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract  class Captor {
@@ -28,9 +31,15 @@ public abstract  class Captor {
     @ManyToOne
     private Site site;
 
+    /**
+     * Version - pour la concurrence
+     */
     @Version
     private int version;
 
+    /**
+     * Type de source d'énergie
+     */
     @Enumerated(EnumType.STRING)
     @NotNull
     private PowerSource powerSource;
@@ -60,6 +69,9 @@ public abstract  class Captor {
         this.name = name;
     }
 
+    /**
+     * Permet de générer un identifiant unique
+     */
     @PrePersist
     public void generateId(){
         this.id = UUID.randomUUID().toString();

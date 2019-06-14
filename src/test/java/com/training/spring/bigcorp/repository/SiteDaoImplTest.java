@@ -7,11 +7,9 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
@@ -19,17 +17,29 @@ import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Classe de tests de la classe SiteDaoImpl
+ */
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @ComponentScan
 public class SiteDaoImplTest {
 
+    /**
+     * Dao Site
+     */
     @Autowired
     private SiteDao siteDao;
 
+    /**
+     * Entity Manager
+     */
     @Autowired
     EntityManager entityManager;
 
+    /**
+     * Site
+     */
     private Site site;
 
     @Test

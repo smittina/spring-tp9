@@ -7,14 +7,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
@@ -23,25 +20,46 @@ import org.hibernate.exception.ConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Classe de tests de la classe CaptorDaoImpl
+ */
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @ComponentScan
 public class CaptorDaoImplTest {
 
+    /**
+     * Dao Captor
+     */
     @Autowired
     private CaptorDao captorDao;
 
+    /**
+     * Dao Measure
+     */
     @Autowired
     private MeasureDao measureDao;
 
+    /**
+     * Site
+     */
     private Site site;
 
+    /**
+     * Dao Site
+     */
     @Autowired
     private SiteDao siteDao;
 
+    /**
+     * Entity Manager
+     */
     @Autowired
     private EntityManager entityManager;
 
+    /**
+     * Permet d'initialiser certains objets avant les tests
+     */
     @Before
     public void init(){
         site = new Site("name");

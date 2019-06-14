@@ -27,14 +27,16 @@
                             </ul>
                         </td>
                         <td>
-                            <a class="btn btn-primary" href="/sites/{{id}}" role="button">Editer</a>
+                            {{#admin}}
+                            <a class="btn btn-primary" href="/sites/{{id}}" role="button">Editer</a>{{/admin}}
                             <a class="btn btn-primary" href="/sites/{{id}}/measures" role="button">Mesures</a>
                         </td>
                     </tr>
                         {{/sites}}
                 </tbody>
             </table>
-            <a class="btn btn-primary" href="/sites/create" role="button">Nouveau site</a>
+            {{#admin}}
+            <a class="btn btn-primary" href="/sites/create" role="button">Nouveau site</a>{{/admin}}
         </div>
         {{> partial-footer}}
     </body>

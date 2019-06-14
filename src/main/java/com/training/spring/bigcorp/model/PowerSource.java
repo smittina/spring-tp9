@@ -1,7 +1,7 @@
 package com.training.spring.bigcorp.model;
 
 /**
- * Enumeration correspondant aux différents types de capteurs
+ * Enumeration correspondant aux différents types sources d'énergie et aussi de capteurs
  */
 public enum PowerSource {
     FIXED,

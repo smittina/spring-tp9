@@ -13,13 +13,25 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 
+/**
+ * Service pour un site
+ */
 @Service
 public class SiteServiceImpl implements SiteService {
 
+    /**
+     * Logger
+     */
     private static Logger LOG = LoggerFactory.getLogger(SiteService.class);
 
+    /**
+     * Service pour capteur
+     */
     private CaptorService captorService;
 
+    /**
+     * Permet de charger des resources
+     */
     @Autowired
     private ResourceLoader resourceLoader;
 

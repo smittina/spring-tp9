@@ -2,19 +2,50 @@ package com.training.spring.bigcorp.controller.dto;
 
 import com.training.spring.bigcorp.model.*;
 
+/**
+ * Représente le Dto des Captor
+ */
 public class CaptorDto {
+    /**
+     * captor powersource
+     */
     private PowerSource powerSource;
+    /**
+     * Captor id
+     */
     private String id;
+    /**
+     * Captor name
+     */
     private String name;
+    /**
+     * Site id
+     */
     private String siteId;
+    /**
+     * Site name
+     */
     private String siteName;
+    /**
+     * Default power in watt
+     */
     private Integer defaultPowerInWatt;
+    /**
+     * Minimum power in watt
+     */
     private Integer minPowerInWatt;
+    /**
+     * Maxmimum power in watt
+     */
     private Integer maxPowerInWatt;
 
     public CaptorDto(){
 
     }
+
+    /**
+     * Constructors
+     */
 
     public CaptorDto(Site site, FixedCaptor fixedCaptor){
         this.powerSource = PowerSource.FIXED;
@@ -43,6 +74,11 @@ public class CaptorDto {
         this.siteName = site.getName();
     }
 
+    /**
+     * Crée un type de capteur en fonction du type de powerSource
+     * @param site
+     * @return
+     */
     public Captor toCaptor(Site site){
         Captor captor;
         switch (powerSource){
@@ -62,6 +98,9 @@ public class CaptorDto {
         return captor;
     }
 
+    /**
+     * Getters & Setters
+     */
     public PowerSource getPowerSource() {
         return powerSource;
     }

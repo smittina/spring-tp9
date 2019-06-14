@@ -7,11 +7,13 @@ import com.training.spring.bigcorp.service.measure.MeasureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Service pour les capteurs
+ */
 @Service
 public class CaptorServiceImpl implements CaptorService{
 
@@ -28,7 +30,9 @@ public class CaptorServiceImpl implements CaptorService{
      */
     MeasureService realMeasureService;
 
-
+    /**
+     * Dao Captor
+     */
     CaptorDao captorDao;
 
 

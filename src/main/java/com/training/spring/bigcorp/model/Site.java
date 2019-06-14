@@ -7,6 +7,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Représente un site
+ */
 @Entity
 public class Site {
     /**
@@ -28,6 +31,9 @@ public class Site {
     @OneToMany(mappedBy = "site")
     private Set<Captor> captors;
 
+    /**
+     * Version - concurrence
+     */
     @Version
     private int version;
 

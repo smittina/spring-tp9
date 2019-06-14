@@ -1,14 +1,20 @@
 package com.training.spring.bigcorp.model;
 
-import javax.persistence.Column;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Représente un capteur avec des valeurs fixes
+ */
 @Entity
 @DiscriminatorValue("FIXED")
 public class FixedCaptor extends Captor {
 
+    /**
+     * Energie par défaut en watt
+     */
     @NotNull
     private Integer defaultPowerInWatt;
 

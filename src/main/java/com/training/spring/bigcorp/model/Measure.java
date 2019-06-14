@@ -2,10 +2,12 @@ package com.training.spring.bigcorp.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 import java.time.Instant;
 import java.util.Objects;
 
+/**
+ * Représente une mesure d'un capteur
+ */
 @Entity
 public class Measure {
 
@@ -20,7 +22,7 @@ public class Measure {
      * Instant au format UTC où la date a été lue
      */
     @NotNull
-    @Past
+    //@Past
     private Instant instant;
 
     /**
@@ -35,6 +37,9 @@ public class Measure {
     @ManyToOne
     private Captor captor;
 
+    /**
+     * Version - pour la concurrence
+     */
     @Version
     private int version;
 

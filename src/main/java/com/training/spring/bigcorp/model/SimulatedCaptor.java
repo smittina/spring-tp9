@@ -5,13 +5,22 @@ import javax.persistence.Entity;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Représente un capteur avec des valeurs simulées
+ */
 @Entity
 @DiscriminatorValue("SIMULATED")
 public class SimulatedCaptor  extends Captor{
 
+    /**
+     * Minimum d'énergie en Watt
+     */
     @NotNull
     private Integer minPowerInWatt;
 
+    /**
+     * Maximum d'énergie en Watt
+     */
     @NotNull
     private Integer maxPowerInWatt;
 
